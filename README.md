@@ -27,7 +27,33 @@ $users = KeycloakAdmin::users()->all();
 
 // Get a user by id
 $user = KeycloakAdmin::users()->get('realm', 'user-id');
+
+// Get all groups
+KeycloakAdmin::groups()->all();
+
+// Get a group by id
+KeycloakAdmin::groups()->get('realm', 'group-id');
+
+// Get all clients
+KeycloakAdmin::clients()->all();
+
+// Get a client by id
+KeycloakAdmin::clients()->get('realm', 'client-id');
+
+// Get all roles
+KeycloakAdmin::roles()->all();
+
+// Get a role by name
+KeycloakAdmin::roles()->get('realm', 'role-name');
+
+// Get all realms
+KeycloakAdmin::realms()->all();
+
+// Get a realm by name
+KeycloakAdmin::realms()->get('realm-name');
 ```
+
+More methods can be found in the [fschmtt/keycloak-rest-api-client-php](fschmtt/keycloak-rest-api-client-php) library.
 
 # LICENSE
 

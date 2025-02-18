@@ -1,0 +1,51 @@
+{
+  "name": "overtrue/laravel-keycloak-admin",
+  "description": "Laravel wrapper for the keycloak admin library",
+  "keywords": [
+    "laravel",
+    "keycloak"
+  ],
+  "homepage": "https://gitlab.com/overtrue/laravel-keycloak-admin",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "overtrue"
+    }
+  ],
+  "require": {
+    "php": ">=8.4",
+    "fschmtt/keycloak-rest-api-client-php": "^0.30.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Overtrue\\LaravelKeycloakAdmin\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Overtrue\\LaravelKeycloakAdmin\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Overtrue\\LaravelKeycloakAdmin\\KeycloakServiceProvider"
+      ],
+      "aliases": {
+        "KeycloakAdmin": "Overtrue\\LaravelKeycloakAdmin\\Facades\\KeycloakAdmin"
+      }
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^11.0",
+    "orchestra/testbench": "^9.0",
+    "laravel/pint": "dev-main"
+  },
+  "minimum-stability": "stable",
+  "scripts": {
+    "pint": "vendor/bin/pint",
+    "fix-style": "vendor/bin/pint",
+    "test": "vendor/bin/phpunit",
+    "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+  }
+}

@@ -14,7 +14,7 @@
   ],
   "require": {
     "php": ">=8.4",
-    "fschmtt/keycloak-rest-api-client-php": "^0.30.0"
+    "fschmtt/keycloak-rest-api-client-php": "^0.31.0"
   },
   "autoload": {
     "psr-4": {

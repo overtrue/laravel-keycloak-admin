@@ -2,15 +2,15 @@
 
 namespace Overtrue\LaravelKeycloakAdmin\Facades;
 
-use Fschmtt\Keycloak\Keycloak;
-use Fschmtt\Keycloak\Resource\AttackDetection;
-use Fschmtt\Keycloak\Resource\Clients;
-use Fschmtt\Keycloak\Resource\Groups;
-use Fschmtt\Keycloak\Resource\Organizations;
-use Fschmtt\Keycloak\Resource\Realms;
-use Fschmtt\Keycloak\Resource\Roles;
-use Fschmtt\Keycloak\Resource\ServerInfo;
-use Fschmtt\Keycloak\Resource\Users;
+use Overtrue\Keycloak\Keycloak;
+use Overtrue\Keycloak\Resource\AttackDetection;
+use Overtrue\Keycloak\Resource\Clients;
+use Overtrue\Keycloak\Resource\Groups;
+use Overtrue\Keycloak\Resource\Organizations;
+use Overtrue\Keycloak\Resource\Realms;
+use Overtrue\Keycloak\Resource\Roles;
+use Overtrue\Keycloak\Resource\ServerInfo;
+use Overtrue\Keycloak\Resource\Users;
 use Illuminate\Support\Facades\Facade;
 use Overtrue\KeycloakAdmin\Client;
 

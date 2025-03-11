@@ -2,7 +2,7 @@
 
 namespace Overtrue\LaravelKeycloakAdmin;
 
-use Fschmtt\Keycloak\Keycloak;
+use Overtrue\Keycloak\Keycloak;
 use Illuminate\Support\ServiceProvider;
 
 class KeycloakServiceProvider extends ServiceProvider

@@ -410,12 +410,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/overtrue/keycloak-rest-api-client-php.git",
-                "reference": "4b9aacee1dc23f86ce94f06f4cbffdd09fa4655a"
+                "reference": "b5c1412f4b83b7a35dc4928910a1038035442040"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/overtrue/keycloak-rest-api-client-php/zipball/4b9aacee1dc23f86ce94f06f4cbffdd09fa4655a",
-                "reference": "4b9aacee1dc23f86ce94f06f4cbffdd09fa4655a",
+                "url": "https://api.github.com/repos/overtrue/keycloak-rest-api-client-php/zipball/b5c1412f4b83b7a35dc4928910a1038035442040",
+                "reference": "b5c1412f4b83b7a35dc4928910a1038035442040",
                 "shasum": ""
             },
             "require": {
@@ -459,9 +459,9 @@
             ],
             "description": "PHP client to interact with Keycloak's Admin REST API.",
             "support": {
-                "source": "https://github.com/overtrue/keycloak-rest-api-client-php/tree/0.1.2"
+                "source": "https://github.com/overtrue/keycloak-rest-api-client-php/tree/main"
             },
-            "time": "2025-03-20T04:22:05+00:00"
+            "time": "2025-03-21T03:20:58+00:00"
         },
         {
             "name": "psr/clock",
@@ -2096,16 +2096,16 @@
         },
         {
             "name": "egulias/email-validator",
-            "version": "4.0.3",
+            "version": "4.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/egulias/EmailValidator.git",
-                "reference": "b115554301161fa21467629f1e1391c1936de517"
+                "reference": "d42c8731f0624ad6bdc8d3e5e9a4524f68801cfa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/b115554301161fa21467629f1e1391c1936de517",
-                "reference": "b115554301161fa21467629f1e1391c1936de517",
+                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/d42c8731f0624ad6bdc8d3e5e9a4524f68801cfa",
+                "reference": "d42c8731f0624ad6bdc8d3e5e9a4524f68801cfa",
                 "shasum": ""
             },
             "require": {
@@ -2151,7 +2151,7 @@
             ],
             "support": {
                 "issues": "https://github.com/egulias/EmailValidator/issues",
-                "source": "https://github.com/egulias/EmailValidator/tree/4.0.3"
+                "source": "https://github.com/egulias/EmailValidator/tree/4.0.4"
             },
             "funding": [
                 {
@@ -2159,7 +2159,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-12-27T00:36:43+00:00"
+            "time": "2025-03-06T22:45:56+00:00"
         },
         {
             "name": "fakerphp/faker",
@@ -4750,27 +4750,27 @@
         },
         {
             "name": "orchestra/workbench",
-            "version": "v9.13.3",
+            "version": "v9.13.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchestral/workbench.git",
-                "reference": "c20091beb7574fae13d8f7add0c5a704a353b1df"
+                "reference": "4f97d76ec690b01a3d75450cb560328b61ce4af5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchestral/workbench/zipball/c20091beb7574fae13d8f7add0c5a704a353b1df",
-                "reference": "c20091beb7574fae13d8f7add0c5a704a353b1df",
+                "url": "https://api.github.com/repos/orchestral/workbench/zipball/4f97d76ec690b01a3d75450cb560328b61ce4af5",
+                "reference": "4f97d76ec690b01a3d75450cb560328b61ce4af5",
                 "shasum": ""
             },
             "require": {
                 "composer-runtime-api": "^2.2",
                 "fakerphp/faker": "^1.23",
-                "laravel/framework": "^11.44.1",
+                "laravel/framework": "^11.44.2",
                 "laravel/pail": "^1.2",
                 "laravel/tinker": "^2.9",
                 "nunomaduro/collision": "^8.0",
                 "orchestra/canvas": "^9.2.2",
-                "orchestra/sidekick": "^1.0.5",
+                "orchestra/sidekick": "^1.1.0",
                 "orchestra/testbench-core": "^9.12.0",
                 "php": "^8.2",
                 "symfony/polyfill-php83": "^1.31",
@@ -4813,9 +4813,9 @@
             ],
             "support": {
                 "issues": "https://github.com/orchestral/workbench/issues",
-                "source": "https://github.com/orchestral/workbench/tree/v9.13.3"
+                "source": "https://github.com/orchestral/workbench/tree/v9.13.4"
             },
-            "time": "2025-03-06T10:42:35+00:00"
+            "time": "2025-03-20T07:15:53+00:00"
         },
         {
             "name": "phar-io/manifest",

@@ -5,7 +5,6 @@ namespace Overtrue\LaravelKeycloakAdmin\Tests;
 use Illuminate\Support\Facades\Cache;
 use Overtrue\Keycloak\Keycloak;
 use Overtrue\LaravelKeycloakAdmin\Facades\KeycloakAdmin;
-use Overtrue\LaravelKeycloakAdmin\LaravelCacheTokenStorage;
 
 class IntegrationTest extends TestCase
 {
@@ -26,21 +25,24 @@ class IntegrationTest extends TestCase
         $this->assertSame($keycloakFromContainer, $keycloakFromFacade);
     }
 
-    public function test_cache_token_storage_integration(): void
+    public function test_laravel_cache_integration(): void
     {
-        // Test that cache token storage works with Laravel's cache system
-        $storage = new LaravelCacheTokenStorage;
+        // Test that Laravel cache system works with the application
+        Cache::put('test-integration-key', 'test-value', 60);
 
-        // Mock a simple token string for testing
-        Cache::put('laravel-keycloak-admin-cache-token', 'mock.jwt.token');
+        $this->assertTrue(Cache::has('test-integration-key'));
+        $this->assertEquals('test-value', Cache::get('test-integration-key'));
 
-        $this->assertTrue(Cache::has('laravel-keycloak-admin-cache-token'));
-        $this->assertEquals('mock.jwt.token', Cache::get('laravel-keycloak-admin-cache-token'));
+        Cache::forget('test-integration-key');
+        $this->assertFalse(Cache::has('test-integration-key'));
     }
 
     public function test_service_provider_integration_with_cache_enabled(): void
     {
         $this->app['config']->set('keycloak-admin.use_laravel_cache', true);
+        $this->app['config']->set('keycloak-admin.base_url', 'http://localhost:8080');
+        $this->app['config']->set('keycloak-admin.username', 'admin');
+        $this->app['config']->set('keycloak-admin.password', 'admin');
 
         // Force re-registration
         $this->app->forgetInstance(Keycloak::class);
@@ -49,11 +51,17 @@ class IntegrationTest extends TestCase
         $keycloak = $this->app->make(Keycloak::class);
 
         $this->assertInstanceOf(Keycloak::class, $keycloak);
+
+        // 验证缓存配置正确设置
+        $this->assertTrue(config('keycloak-admin.use_laravel_cache'));
     }
 
     public function test_service_provider_integration_with_cache_disabled(): void
     {
         $this->app['config']->set('keycloak-admin.use_laravel_cache', false);
+        $this->app['config']->set('keycloak-admin.base_url', 'http://localhost:8080');
+        $this->app['config']->set('keycloak-admin.username', 'admin');
+        $this->app['config']->set('keycloak-admin.password', 'admin');
 
         // Force re-registration
         $this->app->forgetInstance(Keycloak::class);
@@ -62,6 +70,9 @@ class IntegrationTest extends TestCase
         $keycloak = $this->app->make(Keycloak::class);
 
         $this->assertInstanceOf(Keycloak::class, $keycloak);
+
+        // 验证缓存配置正确设置
+        $this->assertFalse(config('keycloak-admin.use_laravel_cache'));
     }
 
     public function test_config_publishing_integration(): void
@@ -75,5 +86,51 @@ class IntegrationTest extends TestCase
         $this->assertArrayHasKey('username', $config);
         $this->assertArrayHasKey('password', $config);
         $this->assertArrayHasKey('use_laravel_cache', $config);
+    }
+
+    public function test_keycloak_configuration_integration(): void
+    {
+        $this->app['config']->set('keycloak-admin.base_url', 'http://test-server:8080');
+        $this->app['config']->set('keycloak-admin.username', 'test-user');
+        $this->app['config']->set('keycloak-admin.password', 'test-pass');
+        $this->app['config']->set('keycloak-admin.use_laravel_cache', true);
+
+        $this->app->forgetInstance(Keycloak::class);
+
+        $keycloak = $this->app->make(Keycloak::class);
+
+        $this->assertInstanceOf(Keycloak::class, $keycloak);
+
+        // 验证配置正确应用
+        $this->assertEquals('http://test-server:8080', config('keycloak-admin.base_url'));
+        $this->assertEquals('test-user', config('keycloak-admin.username'));
+        $this->assertEquals('test-pass', config('keycloak-admin.password'));
+        $this->assertTrue(config('keycloak-admin.use_laravel_cache'));
+    }
+
+    public function test_service_registration_with_different_configs(): void
+    {
+        // Test multiple service registrations with different configurations
+        $configs = [
+            ['use_laravel_cache' => true, 'base_url' => 'http://server1:8080'],
+            ['use_laravel_cache' => false, 'base_url' => 'http://server2:8080'],
+            ['use_laravel_cache' => true, 'base_url' => 'http://server3:8080'],
+        ];
+
+        foreach ($configs as $config) {
+            $this->app['config']->set('keycloak-admin.use_laravel_cache', $config['use_laravel_cache']);
+            $this->app['config']->set('keycloak-admin.base_url', $config['base_url']);
+            $this->app['config']->set('keycloak-admin.username', 'admin');
+            $this->app['config']->set('keycloak-admin.password', 'admin');
+
+            $this->app->forgetInstance(Keycloak::class);
+
+            $keycloak = $this->app->make(Keycloak::class);
+            $this->assertInstanceOf(Keycloak::class, $keycloak);
+
+            // Verify config is applied
+            $this->assertEquals($config['use_laravel_cache'], config('keycloak-admin.use_laravel_cache'));
+            $this->assertEquals($config['base_url'], config('keycloak-admin.base_url'));
+        }
     }
 }

@@ -51,12 +51,12 @@ class ConfigTest extends TestCase
         unset($_ENV['KEYCLOAK_BASE_URL']);
     }
 
-    public function test_cache_key_configuration(): void
+    public function test_use_laravel_cache_config(): void
     {
-        $this->app['config']->set('keycloak-admin.access_token_cache_key', 'custom-access-token-key');
-        $this->app['config']->set('keycloak-admin.refresh_token_cache_key', 'custom-refresh-token-key');
+        $this->app['config']->set('keycloak-admin.use_laravel_cache', true);
+        $this->assertTrue(config('keycloak-admin.use_laravel_cache'));
 
-        $this->assertEquals('custom-access-token-key', config('keycloak-admin.access_token_cache_key'));
-        $this->assertEquals('custom-refresh-token-key', config('keycloak-admin.refresh_token_cache_key'));
+        $this->app['config']->set('keycloak-admin.use_laravel_cache', false);
+        $this->assertFalse(config('keycloak-admin.use_laravel_cache'));
     }
 }

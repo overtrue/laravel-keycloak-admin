@@ -3,57 +3,10 @@
 namespace Overtrue\LaravelKeycloakAdmin\Tests;
 
 use Illuminate\Support\Facades\Cache;
-use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Signer\Hmac\Sha256;
-use Lcobucci\JWT\Signer\Key\InMemory;
-use Overtrue\LaravelKeycloakAdmin\LaravelCacheTokenStorage;
+use Overtrue\Keycloak\Keycloak;
 
 class EdgeCasesTest extends TestCase
 {
-    private Configuration $jwtConfig;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->jwtConfig = Configuration::forSymmetricSigner(
-            new Sha256,
-            InMemory::plainText('your-256-bit-secret-your-256-bit-secret')
-        );
-    }
-
-    public function test_token_storage_with_very_long_cache_keys(): void
-    {
-        $longKey = str_repeat('a', 200);
-        $storage = new LaravelCacheTokenStorage($longKey, $longKey.'-refresh');
-
-        $token = $this->jwtConfig->builder()
-            ->identifiedBy('long-key-test')
-            ->expiresAt(new \DateTimeImmutable('+1 hour'))
-            ->getToken($this->jwtConfig->signer(), $this->jwtConfig->signingKey());
-
-        $storage->storeAccessToken($token);
-        $retrievedToken = $storage->retrieveAccessToken();
-
-        $this->assertEquals($token->toString(), $retrievedToken->toString());
-    }
-
-    public function test_token_storage_with_special_characters_in_keys(): void
-    {
-        $specialKey = 'key-with-special-chars-@#$%^&*()';
-        $storage = new LaravelCacheTokenStorage($specialKey, $specialKey.'-refresh');
-
-        $token = $this->jwtConfig->builder()
-            ->identifiedBy('special-char-test')
-            ->expiresAt(new \DateTimeImmutable('+1 hour'))
-            ->getToken($this->jwtConfig->signer(), $this->jwtConfig->signingKey());
-
-        $storage->storeAccessToken($token);
-        $retrievedToken = $storage->retrieveAccessToken();
-
-        $this->assertEquals($token->toString(), $retrievedToken->toString());
-    }
-
     public function test_config_with_boolean_values(): void
     {
         $this->app['config']->set('keycloak-admin.use_laravel_cache', true);
@@ -78,39 +31,22 @@ class EdgeCasesTest extends TestCase
         $this->assertEquals(0, config('keycloak-admin.username'));
     }
 
-    public function test_token_expiration_handling(): void
+    public function test_config_with_empty_strings(): void
     {
-        $storage = new LaravelCacheTokenStorage;
+        $this->app['config']->set('keycloak-admin.base_url', '');
+        $this->app['config']->set('keycloak-admin.username', '');
+        $this->app['config']->set('keycloak-admin.password', '');
 
-        // Create an expired token
-        $expiredToken = $this->jwtConfig->builder()
-            ->identifiedBy('expired-token')
-            ->expiresAt(new \DateTimeImmutable('-1 hour'))
-            ->getToken($this->jwtConfig->signer(), $this->jwtConfig->signingKey());
+        $this->assertEquals('', config('keycloak-admin.base_url'));
+        $this->assertEquals('', config('keycloak-admin.username'));
+        $this->assertEquals('', config('keycloak-admin.password'));
 
-        $storage->storeAccessToken($expiredToken);
-        $retrievedToken = $storage->retrieveAccessToken();
+        // Keycloak service should still be created (may throw exception during actual usage)
+        $this->app->forgetInstance(Keycloak::class);
 
-        // Should still retrieve the token (expiration handling is typically done by the consumer)
-        $this->assertNotNull($retrievedToken);
-        $this->assertEquals($expiredToken->toString(), $retrievedToken->toString());
-    }
-
-    public function test_multiple_storage_instances_with_same_keys(): void
-    {
-        $storage1 = new LaravelCacheTokenStorage('shared-key', 'shared-refresh-key');
-        $storage2 = new LaravelCacheTokenStorage('shared-key', 'shared-refresh-key');
-
-        $token = $this->jwtConfig->builder()
-            ->identifiedBy('shared-key-test')
-            ->expiresAt(new \DateTimeImmutable('+1 hour'))
-            ->getToken($this->jwtConfig->signer(), $this->jwtConfig->signingKey());
-
-        $storage1->storeAccessToken($token);
-        $retrievedFromStorage2 = $storage2->retrieveAccessToken();
-
-        // Both should access the same cached token
-        $this->assertEquals($token->toString(), $retrievedFromStorage2->toString());
+        // Empty strings might cause issues, but service should still be registered
+        $keycloak = $this->app->make(Keycloak::class);
+        $this->assertInstanceOf(Keycloak::class, $keycloak);
     }
 
     public function test_cache_driver_switching(): void
@@ -118,17 +54,13 @@ class EdgeCasesTest extends TestCase
         // Test with array cache driver
         $this->app['config']->set('cache.default', 'array');
 
-        $storage = new LaravelCacheTokenStorage;
+        Cache::put('test-cache-key', 'test-value', 60);
 
-        $token = $this->jwtConfig->builder()
-            ->identifiedBy('array-cache-test')
-            ->expiresAt(new \DateTimeImmutable('+1 hour'))
-            ->getToken($this->jwtConfig->signer(), $this->jwtConfig->signingKey());
+        $this->assertTrue(Cache::has('test-cache-key'));
+        $this->assertEquals('test-value', Cache::get('test-cache-key'));
 
-        $storage->storeAccessToken($token);
-        $retrievedToken = $storage->retrieveAccessToken();
-
-        $this->assertEquals($token->toString(), $retrievedToken->toString());
+        Cache::forget('test-cache-key');
+        $this->assertFalse(Cache::has('test-cache-key'));
     }
 
     public function test_config_merging_with_existing_values(): void
@@ -144,5 +76,57 @@ class EdgeCasesTest extends TestCase
 
         // Default config should also exist
         $this->assertEquals('http://localhost:8080', config('keycloak-admin.base_url'));
+    }
+
+    public function test_keycloak_service_with_different_cache_configurations(): void
+    {
+        // Test with cache enabled
+        $this->app['config']->set('keycloak-admin.use_laravel_cache', true);
+        $this->app['config']->set('keycloak-admin.base_url', 'http://localhost:8080');
+        $this->app['config']->set('keycloak-admin.username', 'admin');
+        $this->app['config']->set('keycloak-admin.password', 'admin');
+
+        $this->app->forgetInstance(Keycloak::class);
+        $keycloakWithCache = $this->app->make(Keycloak::class);
+
+        // Test with cache disabled
+        $this->app['config']->set('keycloak-admin.use_laravel_cache', false);
+        $this->app->forgetInstance(Keycloak::class);
+        $keycloakWithoutCache = $this->app->make(Keycloak::class);
+
+        $this->assertInstanceOf(Keycloak::class, $keycloakWithCache);
+        $this->assertInstanceOf(Keycloak::class, $keycloakWithoutCache);
+
+        // They should be different instances due to different configurations
+        $this->assertNotSame($keycloakWithCache, $keycloakWithoutCache);
+    }
+
+    public function test_service_provider_with_missing_optional_config(): void
+    {
+        // Remove optional config and set required ones
+        $config = [
+            'base_url' => 'http://localhost:8080',
+            'username' => 'admin',
+            'password' => 'admin',
+            'use_laravel_cache' => true,
+        ];
+
+        $this->app['config']->set('keycloak-admin', $config);
+        $this->app->forgetInstance(Keycloak::class);
+
+        $keycloak = $this->app->make(Keycloak::class);
+        $this->assertInstanceOf(Keycloak::class, $keycloak);
+    }
+
+    public function test_multiple_service_instances_are_same(): void
+    {
+        // Verify singleton behavior in edge cases
+        $keycloak1 = $this->app->make(Keycloak::class);
+        $keycloak2 = $this->app->make('keycloak-admin');
+        $keycloak3 = $this->app->make(Keycloak::class);
+
+        $this->assertSame($keycloak1, $keycloak2);
+        $this->assertSame($keycloak1, $keycloak3);
+        $this->assertSame($keycloak2, $keycloak3);
     }
 }

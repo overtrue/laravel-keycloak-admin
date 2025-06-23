@@ -27,14 +27,14 @@ class LaravelCacheTokenStorage implements TokenStorageInterface
     public function retrieveAccessToken(): ?Token
     {
         return Cache::has($this->accessTokenCacheKey)
-            ? new Token\Parser(new JoseEncoder)->parse(Cache::get($this->accessTokenCacheKey))
+            ? (new Token\Parser(new JoseEncoder))->parse(Cache::get($this->accessTokenCacheKey))
             : null;
     }
 
     public function retrieveRefreshToken(): ?Token
     {
         return Cache::has($this->refreshTokenCacheKey)
-            ? new Token\Parser(new JoseEncoder)->parse(Cache::get($this->refreshTokenCacheKey))
+            ? (new Token\Parser(new JoseEncoder))->parse(Cache::get($this->refreshTokenCacheKey))
             : null;
     }
 }

@@ -2,8 +2,8 @@
 
 namespace Overtrue\LaravelKeycloakAdmin;
 
-use Overtrue\Keycloak\Keycloak;
 use Illuminate\Support\ServiceProvider;
+use Overtrue\Keycloak\Keycloak;
 
 class KeycloakServiceProvider extends ServiceProvider
 {
@@ -18,6 +18,18 @@ class KeycloakServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(Keycloak::class, function () {
+            if (config('keycloak-admin.use_laravel_cache', true)) {
+                return new Keycloak(
+                    baseUrl: config('keycloak-admin.base_url'),
+                    username: config('keycloak-admin.username'),
+                    password: config('keycloak-admin.password'),
+                    tokenStorage: new LaravelCacheTokenStorage(
+                        accessTokenCacheKey: config('keycloak-admin.access_token_cache_key', 'laravel-keycloak-admin-cache-token'),
+                        refreshTokenCacheKey: config('keycloak-admin.refresh_token_cache_key', 'laravel-keycloak-admin-cache-refresh-token')
+                    )
+                );
+            }
+
             return new Keycloak(
                 baseUrl: config('keycloak-admin.base_url'),
                 username: config('keycloak-admin.username'),

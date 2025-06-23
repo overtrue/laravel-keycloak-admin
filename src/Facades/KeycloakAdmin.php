@@ -2,6 +2,7 @@
 
 namespace Overtrue\LaravelKeycloakAdmin\Facades;
 
+use Illuminate\Support\Facades\Facade;
 use Overtrue\Keycloak\Keycloak;
 use Overtrue\Keycloak\Resource\AttackDetection;
 use Overtrue\Keycloak\Resource\Clients;
@@ -11,8 +12,6 @@ use Overtrue\Keycloak\Resource\Realms;
 use Overtrue\Keycloak\Resource\Roles;
 use Overtrue\Keycloak\Resource\ServerInfo;
 use Overtrue\Keycloak\Resource\Users;
-use Illuminate\Support\Facades\Facade;
-use Overtrue\KeycloakAdmin\Client;
 
 /**
  * @method static Users users()

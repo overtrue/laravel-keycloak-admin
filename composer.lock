@@ -410,12 +410,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/overtrue/keycloak-rest-api-client-php.git",
-                "reference": "597cc3619c5d3cf14e45a5ae07abc6d3ac32bdb8"
+                "reference": "9210f8acfa47cbac1fc3c53bca1a46088a361917"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/overtrue/keycloak-rest-api-client-php/zipball/597cc3619c5d3cf14e45a5ae07abc6d3ac32bdb8",
-                "reference": "597cc3619c5d3cf14e45a5ae07abc6d3ac32bdb8",
+                "url": "https://api.github.com/repos/overtrue/keycloak-rest-api-client-php/zipball/9210f8acfa47cbac1fc3c53bca1a46088a361917",
+                "reference": "9210f8acfa47cbac1fc3c53bca1a46088a361917",
                 "shasum": ""
             },
             "require": {
@@ -463,7 +463,7 @@
             "support": {
                 "source": "https://github.com/overtrue/keycloak-rest-api-client-php/tree/main"
             },
-            "time": "2025-06-23T05:25:39+00:00"
+            "time": "2025-06-23T10:09:36+00:00"
         },
         {
             "name": "psr/cache",

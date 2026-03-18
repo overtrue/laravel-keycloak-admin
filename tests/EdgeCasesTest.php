@@ -4,6 +4,7 @@ namespace Overtrue\LaravelKeycloakAdmin\Tests;
 
 use Illuminate\Support\Facades\Cache;
 use Overtrue\Keycloak\Keycloak;
+use Overtrue\LaravelKeycloakAdmin\KeycloakServiceProvider;
 
 class EdgeCasesTest extends TestCase
 {
@@ -69,7 +70,7 @@ class EdgeCasesTest extends TestCase
         $this->app['config']->set('keycloak-admin.custom_key', 'custom_value');
 
         // Re-register the provider to test merging
-        $this->app->register(\Overtrue\LaravelKeycloakAdmin\KeycloakServiceProvider::class, true);
+        $this->app->register(KeycloakServiceProvider::class, true);
 
         // Custom config should still exist
         $this->assertEquals('custom_value', config('keycloak-admin.custom_key'));

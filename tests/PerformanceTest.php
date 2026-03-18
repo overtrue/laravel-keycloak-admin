@@ -4,6 +4,8 @@ namespace Overtrue\LaravelKeycloakAdmin\Tests;
 
 use Illuminate\Support\Facades\Cache;
 use Overtrue\Keycloak\Keycloak;
+use Overtrue\LaravelKeycloakAdmin\Facades\KeycloakAdmin;
+use Overtrue\LaravelKeycloakAdmin\KeycloakServiceProvider;
 
 class PerformanceTest extends TestCase
 {
@@ -70,7 +72,7 @@ class PerformanceTest extends TestCase
 
         // Multiple facade calls should be fast
         for ($i = 0; $i < 100; $i++) {
-            $facade = \Overtrue\LaravelKeycloakAdmin\Facades\KeycloakAdmin::getFacadeRoot();
+            $facade = KeycloakAdmin::getFacadeRoot();
             $this->assertInstanceOf(Keycloak::class, $facade);
         }
 
@@ -87,7 +89,7 @@ class PerformanceTest extends TestCase
 
         // Register service provider multiple times (should be no-op after first time)
         for ($i = 0; $i < 10; $i++) {
-            $this->app->register(\Overtrue\LaravelKeycloakAdmin\KeycloakServiceProvider::class);
+            $this->app->register(KeycloakServiceProvider::class);
         }
 
         $end = microtime(true);

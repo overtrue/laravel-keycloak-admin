@@ -3,6 +3,7 @@
 namespace Overtrue\LaravelKeycloakAdmin\Tests;
 
 use Orchestra\Testbench\TestCase as BaseTestCase;
+use Overtrue\LaravelKeycloakAdmin\Facades\KeycloakAdmin;
 use Overtrue\LaravelKeycloakAdmin\KeycloakServiceProvider;
 
 abstract class TestCase extends BaseTestCase
@@ -27,7 +28,7 @@ abstract class TestCase extends BaseTestCase
     protected function getPackageAliases($app): array
     {
         return [
-            'KeycloakAdmin' => \Overtrue\LaravelKeycloakAdmin\Facades\KeycloakAdmin::class,
+            'KeycloakAdmin' => KeycloakAdmin::class,
         ];
     }
 

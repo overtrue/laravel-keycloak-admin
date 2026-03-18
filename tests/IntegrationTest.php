@@ -5,6 +5,7 @@ namespace Overtrue\LaravelKeycloakAdmin\Tests;
 use Illuminate\Support\Facades\Cache;
 use Overtrue\Keycloak\Keycloak;
 use Overtrue\LaravelKeycloakAdmin\Facades\KeycloakAdmin;
+use Overtrue\LaravelKeycloakAdmin\KeycloakServiceProvider;
 
 class IntegrationTest extends TestCase
 {
@@ -46,7 +47,7 @@ class IntegrationTest extends TestCase
 
         // Force re-registration
         $this->app->forgetInstance(Keycloak::class);
-        $this->app->register(\Overtrue\LaravelKeycloakAdmin\KeycloakServiceProvider::class, true);
+        $this->app->register(KeycloakServiceProvider::class, true);
 
         $keycloak = $this->app->make(Keycloak::class);
 
@@ -65,7 +66,7 @@ class IntegrationTest extends TestCase
 
         // Force re-registration
         $this->app->forgetInstance(Keycloak::class);
-        $this->app->register(\Overtrue\LaravelKeycloakAdmin\KeycloakServiceProvider::class, true);
+        $this->app->register(KeycloakServiceProvider::class, true);
 
         $keycloak = $this->app->make(Keycloak::class);
 

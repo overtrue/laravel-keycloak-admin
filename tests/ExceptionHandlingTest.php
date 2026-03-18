@@ -4,6 +4,8 @@ namespace Overtrue\LaravelKeycloakAdmin\Tests;
 
 use Illuminate\Support\Facades\Cache;
 use Overtrue\Keycloak\Keycloak;
+use Overtrue\LaravelKeycloakAdmin\Facades\KeycloakAdmin;
+use Overtrue\LaravelKeycloakAdmin\KeycloakServiceProvider;
 
 class ExceptionHandlingTest extends TestCase
 {
@@ -81,7 +83,7 @@ class ExceptionHandlingTest extends TestCase
         $this->app->forgetInstance(Keycloak::class);
 
         // Facade should still work due to automatic resolution
-        $facade = \Overtrue\LaravelKeycloakAdmin\Facades\KeycloakAdmin::getFacadeRoot();
+        $facade = KeycloakAdmin::getFacadeRoot();
         $this->assertInstanceOf(Keycloak::class, $facade);
     }
 
@@ -93,7 +95,7 @@ class ExceptionHandlingTest extends TestCase
         // 直接重新注册服务提供者会导致类型错误，这是预期的行为
         // 在实际应用中，这种情况应该被避免，但我们测试系统的健壮性
         try {
-            $this->app->register(\Overtrue\LaravelKeycloakAdmin\KeycloakServiceProvider::class, true);
+            $this->app->register(KeycloakServiceProvider::class, true);
 
             // 如果没有抛出异常，验证配置是否被正确处理
             $config = config('keycloak-admin');
@@ -109,7 +111,7 @@ class ExceptionHandlingTest extends TestCase
         $this->app['config']->set('keycloak-admin', []);
 
         // Re-register to apply config merging
-        $this->app->register(\Overtrue\LaravelKeycloakAdmin\KeycloakServiceProvider::class, true);
+        $this->app->register(KeycloakServiceProvider::class, true);
 
         // Config should be merged with defaults
         $this->assertIsArray(config('keycloak-admin'));
@@ -119,7 +121,7 @@ class ExceptionHandlingTest extends TestCase
     public function test_service_provider_boot_method_runs_safely(): void
     {
         // Test that boot method runs without errors
-        $provider = new \Overtrue\LaravelKeycloakAdmin\KeycloakServiceProvider($this->app);
+        $provider = new KeycloakServiceProvider($this->app);
 
         // Boot method should not throw exceptions
         $provider->boot();
@@ -131,7 +133,7 @@ class ExceptionHandlingTest extends TestCase
     public function test_service_provider_register_method_runs_safely(): void
     {
         // Test that register method runs without errors
-        $provider = new \Overtrue\LaravelKeycloakAdmin\KeycloakServiceProvider($this->app);
+        $provider = new KeycloakServiceProvider($this->app);
 
         // Register method should not throw exceptions
         $provider->register();
